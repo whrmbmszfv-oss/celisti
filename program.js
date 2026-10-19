@@ -8,6 +8,9 @@ window.PROGRAM = {
   // The site reads that sheet live; the `screenings` list below is only a fallback
   // used if Google can't be reached. Empty cells in the sheet use the defaults below.
   sheetId: "1UMf1MhBputBrS1vk8zhGa31u90r4MprMUWdV-nk0Xdw",
+  // Google Sheets API key (restricted to the Sheets API + bobinky.cz). Lets the site read links
+  // stored in the film cells. Leave empty to use the plain CSV export (no links from cells).
+  apiKey: "AIzaSyBnHIBkhaje2kYrsgSOec7DREDBzqyz7js",
   season: "Podzimní filmové večery",
   defaultTime: "19:30",
   durationHours: 3, // how long a screening "counts" as running (and calendar event length)
