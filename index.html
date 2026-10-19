@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Čelisti · Podzimní filmové večery</title>
+<meta name="description" content="Každý týden film, deka a čaj. Kdy a kde je další promítání?">
+<meta property="og:title" content="Čelisti · Podzimní filmové večery">
+<meta property="og:description" content="Kdy a kde je další promítání? Klikni a zahraj si.">
+<meta name="theme-color" content="#1a0709">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎻</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Nunito:wght@400;600;800&display=swap&subset=latin-ext" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a0709;
+    --bg2: #2c0d10;
+    --velvet: #7d1420;
+    --velvet-dark: #3d070d;
+    --gold: #e9b45a;
+    --cream: #f6ead4;
+    --muted: #c9ae95;
+    --red: #d8352a;
+    --orange: #e07a2c;
+    --card: rgba(255, 240, 220, 0.06);
+    --line: rgba(233, 180, 90, 0.25);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(ellipse at 50% 0%, var(--bg2), var(--bg) 70%) fixed, var(--bg);
+    color: var(--cream);
+    font-family: "Nunito", system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── falling leaves ───────────────────────────── */
+  .leaves { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .leaf { position: absolute; top: -40px; width: 22px; height: 22px; animation: fall linear infinite; opacity: .85; }
+  .leaf svg { width: 100%; height: 100%; animation: sway ease-in-out infinite alternate; animation-duration: inherit; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
+  @keyframes sway { from { transform: translateX(-30px) rotate(-20deg); } to { transform: translateX(30px) rotate(25deg); } }
+
+  main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+
+  header { text-align: center; margin-bottom: 18px; }
+  .kicker { letter-spacing: .3em; text-transform: uppercase; font-size: 12px; color: var(--gold); font-weight: 800; }
+  h1 {
+    font-family: "Abril Fatface", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(56px, 14vw, 112px);
+    line-height: .95;
+    margin: 6px 0 4px;
+    color: var(--red);
+    text-shadow: 0 3px 0 #5a0b0b, 0 0 40px rgba(216, 53, 42, .35);
+    letter-spacing: .02em;
+  }
+  .tagline { color: var(--muted); font-style: italic; margin: 0; }
+
+  .layout { display: grid; gap: 28px; align-items: start; }
+  @media (min-width: 900px) { .layout { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); } }
+
+  /* ── theatre ──────────────────────────────────── */
+  .theatre {
+    position: relative;
+    padding: 34px 26px 22px;
+    border-radius: 18px;
+    background: #0d0304;
+    box-shadow: inset 0 0 60px #000, 0 20px 60px rgba(0,0,0,.5);
+    overflow: hidden;
+  }
+  .valance {
+    position: absolute; left: 0; right: 0; top: 0; height: 30px; z-index: 3;
+    background: repeating-linear-gradient(90deg, var(--velvet) 0 18px, var(--velvet-dark) 18px 22px, var(--velvet) 22px 40px);
+    border-bottom: 3px solid var(--gold);
+    -webkit-mask: radial-gradient(circle at 20px 30px, transparent 12px, #000 13px) 0 0 / 40px 100%;
+            mask: radial-gradient(circle at 20px 30px, transparent 12px, #000 13px) 0 0 / 40px 100%;
+  }
+  .curtain {
+    position: absolute; top: 0; bottom: 0; width: 26px; z-index: 2;
+    background: repeating-linear-gradient(90deg, var(--velvet-dark) 0 4px, var(--velvet) 4px 10px, #a21f2c 10px 13px, var(--velvet) 13px 18px);
+  }
+  .curtain.l { left: 0; border-radius: 0 0 40px 0; }
+  .curtain.r { right: 0; border-radius: 0 0 0 40px; }
+
+  .screen {
+    position: relative;
+    max-width: 440px;
+    margin: 0 auto;
+    aspect-ratio: 400 / 560;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 0 4px #e8dccb, 0 0 50px rgba(255, 230, 190, .25);
+    /* a cello bow as the mouse cursor */
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><line x1='4' y1='28' x2='29' y2='3' stroke='white' stroke-opacity='.75' stroke-width='4.5' stroke-linecap='round'/><line x1='4' y1='28' x2='29' y2='3' stroke='%234a200c' stroke-width='2.2' stroke-linecap='round'/><line x1='7' y1='28' x2='28' y2='7' stroke='%23f4ead2' stroke-width='1.3'/><rect x='1.5' y='24.5' width='7' height='5' rx='1' fill='%231a0d08' stroke='white' stroke-opacity='.75' transform='rotate(-45 5 27)'/></svg>") 16 16, ew-resize;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    outline: none;
+  }
+  .screen:focus-visible { box-shadow: 0 0 0 4px var(--gold), 0 0 50px rgba(255, 230, 190, .4); }
+  .screen svg { display: block; width: 100%; height: 100%; }
+  .screen.shake { animation: shake .5s cubic-bezier(.36,.07,.19,.97) 1; }
+  @keyframes shake {
+    10%, 90% { transform: translate(-2px, 1px); }
+    20%, 80% { transform: translate(4px, -2px); }
+    30%, 50%, 70% { transform: translate(-7px, 3px) rotate(-.6deg); }
+    40%, 60% { transform: translate(7px, -3px) rotate(.6deg); }
+  }
+  .note-fx { position: absolute; pointer-events: none; color: var(--gold); font-size: 22px; text-shadow: 0 0 8px rgba(233,180,90,.6); animation: noteup 1.4s ease-out forwards; }
+  @keyframes noteup { from { opacity: 1; transform: translate(-50%, 0) rotate(0); } to { opacity: 0; transform: translate(calc(-50% + var(--dx)), -90px) rotate(var(--rot)); } }
+  .flash { position: absolute; inset: 0; background: #ffd9e0; opacity: 0; pointer-events: none; }
+  .flash.on { animation: flash .6s ease-out; }
+  @keyframes flash { 0% { opacity: .85; } 100% { opacity: 0; } }
+
+  .hint {
+    position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
+    background: rgba(5, 12, 24, .72); border: 1px solid rgba(255,255,255,.15);
+    padding: 8px 14px; border-radius: 999px; font-size: 14px; white-space: nowrap;
+    pointer-events: none; transition: opacity .6s;
+    animation: nudge 1.6s ease-in-out infinite;
+  }
+  .hint.gone { opacity: 0; }
+  @keyframes nudge { 0%,100% { transform: translateX(calc(-50% - 8px)); } 50% { transform: translateX(calc(-50% + 8px)); } }
+
+  .ticket {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    padding: 18px; background: rgba(4, 10, 20, .55); backdrop-filter: blur(2px);
+    opacity: 0; pointer-events: none; transition: opacity .5s; cursor: default;
+  }
+  .ticket.show { opacity: 1; pointer-events: auto; }
+  .ticket-inner {
+    background: var(--cream); color: #2a0b0b; border-radius: 10px; padding: 20px 22px; text-align: center;
+    max-width: 290px; box-shadow: 0 10px 40px rgba(0,0,0,.6); position: relative;
+    -webkit-mask: radial-gradient(circle at 0 50%, transparent 12px, #000 13px) left / 51% 100% no-repeat,
+                  radial-gradient(circle at 100% 50%, transparent 12px, #000 13px) right / 51% 100% no-repeat;
+            mask: radial-gradient(circle at 0 50%, transparent 12px, #000 13px) left / 51% 100% no-repeat,
+                  radial-gradient(circle at 100% 50%, transparent 12px, #000 13px) right / 51% 100% no-repeat;
+    transform: scale(.8) rotate(-4deg); transition: transform .5s cubic-bezier(.2,1.6,.4,1);
+  }
+  .ticket.show .ticket-inner { transform: scale(1) rotate(-2deg); }
+  .ticket h3 { font-family: "Abril Fatface", serif; font-weight: 400; color: var(--red); font-size: 26px; margin: 0 0 6px; }
+  .ticket p { margin: 6px 0; }
+  .ticket .admit { letter-spacing: .25em; font-size: 11px; text-transform: uppercase; font-weight: 800; border-top: 2px dashed #c9ae95; padding-top: 10px; margin-top: 12px; }
+
+  .controls { display: flex; align-items: center; gap: 12px; max-width: 440px; margin: 16px auto 0; }
+  .meter { flex: 1; }
+  .meter-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 4px; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; }
+  .meter-bar { height: 10px; background: rgba(255,255,255,.08); border-radius: 99px; overflow: hidden; }
+  .meter-fill { height: 100%; width: 0; background: linear-gradient(90deg, #2e6c8f, var(--orange), var(--red)); border-radius: 99px; }
+
+  button {
+    font: inherit; font-weight: 800; color: var(--cream); background: var(--card);
+    border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; cursor: pointer;
+    transition: background .2s, transform .1s;
+  }
+  button:hover { background: rgba(255, 240, 220, .12); }
+  button:active { transform: scale(.96); }
+  button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .btn-primary { background: var(--red); border-color: var(--red); color: #fff; }
+  .btn-primary:hover { background: #ea4a3e; }
+  .icon-btn { width: 44px; height: 44px; padding: 0; font-size: 20px; flex: none; }
+
+  /* ── info ─────────────────────────────────────── */
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px;
+    backdrop-filter: blur(4px);
+  }
+  .card + .card { margin-top: 20px; }
+  .eyebrow { color: var(--gold); text-transform: uppercase; letter-spacing: .25em; font-size: 12px; font-weight: 800; margin: 0 0 10px; }
+  .when { font-family: "Abril Fatface", serif; font-size: clamp(30px, 6vw, 42px); line-height: 1.05; margin: 0; }
+  .when .rel { color: var(--orange); display: block; font-size: .6em; margin-bottom: 4px; }
+  .countdown { color: var(--muted); margin: 8px 0 8px; font-weight: 600; }
+  .clock { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 0 20px; max-width: 360px; }
+  .clock[hidden] { display: none; }
+  .unit { background: rgba(0,0,0,.28); border: 1px solid var(--line); border-radius: 12px; padding: 10px 4px 8px; text-align: center; }
+  .unit .num { display: block; font-family: "Abril Fatface", serif; font-size: clamp(26px, 7vw, 36px); line-height: 1; color: var(--cream); font-variant-numeric: tabular-nums; }
+  .unit .lbl { display: block; margin-top: 4px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 800; }
+  .unit.sec .num { color: var(--orange); }
+  .unit .num.tick { animation: tick .35s ease-out; }
+  @keyframes tick { from { transform: translateY(-4px); opacity: .5; } to { transform: none; opacity: 1; } }
+  .facts { display: grid; gap: 12px; margin: 0 0 20px; }
+  .fact { display: flex; gap: 12px; align-items: flex-start; }
+  .fact .ico { font-size: 22px; line-height: 1.2; width: 28px; text-align: center; flex: none; }
+  .fact .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; font-weight: 800; }
+  .fact .v { font-size: 18px; font-weight: 600; }
+  .fact a { color: var(--cream); text-decoration-color: var(--gold); text-underline-offset: 3px; }
+  .note { background: rgba(224, 122, 44, .12); border-left: 3px solid var(--orange); padding: 10px 12px; border-radius: 6px; margin: 0 0 18px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .program { list-style: none; margin: 0; padding: 0; }
+  .program li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(233,180,90,.12); }
+  .program li:first-child { border-top: 0; }
+  .program .d { color: var(--gold); font-weight: 800; }
+  .program .f { color: var(--cream); }
+  .program .f small { display: block; color: var(--muted); }
+  .program li.past { opacity: .4; }
+  .program li.past .f { text-decoration: line-through; }
+  .program li.next .d::after { content: " ●"; color: var(--red); }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 36px; }
+
+  /* poster animation bits */
+  .bubble { animation: rise linear infinite; }
+  @keyframes rise { from { transform: translateY(0); opacity: .6; } to { transform: translateY(-380px); opacity: 0; } }
+  .wave { animation: waves 6s linear infinite; }
+  @keyframes waves { to { transform: translateX(-80px); } }
+  #swimmer { transform-box: view-box; transform-origin: 180px 106px; }
+  #swimmer.yikes { animation: yikes .7s ease-out; }
+  @keyframes yikes {
+    0% { transform: none; }
+    25% { transform: translateY(-26px) rotate(-12deg); }
+    60% { transform: translateY(-8px) rotate(6deg); }
+    100% { transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .leaves, .hint { animation: none; }
+    .leaves { display: none; }
+    .bubble, .wave { animation: none; }
+    .screen.shake, #swimmer.yikes { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="leaves" aria-hidden="true"></div>
+
+<main>
+  <header>
+    <div class="kicker" id="season">Podzimní filmové večery</div>
+    <h1>ČELISTI</h1>
+    <p class="tagline">Už nikdy nepůjdeš do orchestru.</p>
+  </header>
+
+  <div class="layout">
+    <section class="theatre" aria-label="Plátno">
+      <div class="valance"></div>
+      <div class="curtain l"></div>
+      <div class="curtain r"></div>
+
+      <div class="screen" id="screen" tabindex="0" role="application" aria-label="Plakát. Táhni sem a tam (nebo mačkej mezerník) a zahraj Čelisti na violoncello.">
+        <svg viewBox="0 0 400 560" aria-hidden="true">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#1b1030"/>
+              <stop offset=".6" stop-color="#5a2a3a"/>
+              <stop offset="1" stop-color="#c8643a"/>
+            </linearGradient>
+            <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3a7fa3"/>
+              <stop offset=".3" stop-color="#174769"/>
+              <stop offset="1" stop-color="#040e1d"/>
+            </linearGradient>
+            <linearGradient id="fog" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#174769" stop-opacity="0"/>
+              <stop offset=".35" stop-color="#103552" stop-opacity=".7"/>
+              <stop offset="1" stop-color="#040e1d" stop-opacity="1"/>
+            </linearGradient>
+            <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#d0702a"/>
+              <stop offset=".5" stop-color="#9a3d12"/>
+              <stop offset="1" stop-color="#5e2008"/>
+            </linearGradient>
+            <linearGradient id="steel" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#8d949c"/>
+              <stop offset=".45" stop-color="#f2f5f8"/>
+              <stop offset="1" stop-color="#6c727a"/>
+            </linearGradient>
+            <radialGradient id="glow">
+              <stop offset="0" stop-color="#fff2a0"/>
+              <stop offset=".35" stop-color="#ff4a1a"/>
+              <stop offset="1" stop-color="#ff2a00" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="rays" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#bfe6ff" stop-opacity=".22"/>
+              <stop offset="1" stop-color="#bfe6ff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- sky -->
+          <rect width="400" height="112" fill="url(#sky)"/>
+          <circle cx="68" cy="44" r="14" fill="#f3dcb0" opacity=".9"/>
+          <circle cx="68" cy="44" r="26" fill="#f3dcb0" opacity=".08"/>
+
+          <!-- sea -->
+          <rect y="108" width="400" height="452" fill="url(#sea)"/>
+          <g fill="url(#rays)">
+            <polygon points="60,110 100,110 40,560 -40,560"/>
+            <polygon points="170,110 200,110 230,560 140,560"/>
+            <polygon points="280,110 320,110 440,560 350,560"/>
+          </g>
+
+          <!-- bubbles -->
+          <g fill="none" stroke="#bfe6ff" stroke-width="1.2" opacity=".6">
+            <circle class="bubble" cx="120" cy="520" r="3" style="animation-duration:7s"/>
+            <circle class="bubble" cx="285" cy="540" r="4" style="animation-duration:9s;animation-delay:-3s"/>
+            <circle class="bubble" cx="230" cy="500" r="2" style="animation-duration:6s;animation-delay:-1s"/>
+            <circle class="bubble" cx="80" cy="470" r="2.5" style="animation-duration:8s;animation-delay:-5s"/>
+            <circle class="bubble" cx="330" cy="480" r="2" style="animation-duration:7.5s;animation-delay:-2s"/>
+          </g>
+
+          <!-- THE CELLO – upside down, endpin spike aimed at the swimmer -->
+          <g id="cello" transform="translate(200 430) scale(.62)">
+            <g transform="translate(0 -150) rotate(180 0 131)">
+              <!-- the spike -->
+              <polygon points="-4.5,262 4.5,262 0,352" fill="url(#steel)" stroke="#3c4148" stroke-width="1"/>
+              <rect x="-7" y="258" width="14" height="10" rx="3" fill="#1a0d08"/>
+              <path fill="url(#wood)" stroke="#2e1004" stroke-width="3"
+                d="M -20 0 C -60 0 -75 30 -72 60 C -70 95 -45 105 -48 130 C -50 155 -92 160 -90 205 C -88 245 -50 264 0 264 C 50 264 88 245 90 205 C 92 160 50 155 48 130 C 45 105 70 95 72 60 C 75 30 60 0 20 0 Z"/>
+              <path fill="none" stroke="#f0b27a" stroke-width="1.5" opacity=".35" transform="translate(0 132) scale(.92) translate(0 -132)"
+                d="M -20 0 C -60 0 -75 30 -72 60 C -70 95 -45 105 -48 130 C -50 155 -92 160 -90 205 C -88 245 -50 264 0 264 C 50 264 88 245 90 205 C 92 160 50 155 48 130 C 45 105 70 95 72 60 C 75 30 60 0 20 0 Z"/>
+              <path d="M 50 150 C 60 180 50 210 30 240" stroke="#ffd2a0" stroke-width="5" fill="none" opacity=".22" stroke-linecap="round"/>
+
+              <!-- f-holes -->
+              <g stroke="#1a0805" stroke-width="4" fill="none" stroke-linecap="round">
+                <path d="M -30 112 C -44 125 -30 150 -44 168"/>
+                <path d="M 30 112 C 44 125 30 150 44 168"/>
+              </g>
+              <g fill="#1a0805">
+                <circle cx="-30" cy="112" r="4"/><circle cx="-44" cy="168" r="4"/>
+                <circle cx="30" cy="112" r="4"/><circle cx="44" cy="168" r="4"/>
+              </g>
+
+              <!-- fingerboard, pegbox, scroll -->
+              <path d="M -9 -150 L 9 -150 L 15 120 L -15 120 Z" fill="#1a0d08"/>
+              <rect x="-10" y="-197" width="20" height="50" rx="5" fill="url(#wood)" stroke="#2e1004" stroke-width="2"/>
+              <rect x="-4" y="-191" width="8" height="38" rx="3" fill="#2a1206"/>
+              <g fill="#1a0d08">
+                <ellipse cx="-17" cy="-186" rx="8" ry="4"/><ellipse cx="17" cy="-176" rx="8" ry="4"/>
+                <ellipse cx="-17" cy="-166" rx="8" ry="4"/><ellipse cx="17" cy="-158" rx="8" ry="4"/>
+              </g>
+              <circle cx="0" cy="-210" r="15" fill="url(#wood)" stroke="#2e1004" stroke-width="2"/>
+              <path d="M 0 -210 m -9 0 a 9 9 0 1 1 9 9 a 6 6 0 1 1 -6 -6 a 3 3 0 1 1 3 3" fill="none" stroke="#2e1004" stroke-width="2"/>
+
+              <!-- bridge, strings, tailpiece -->
+              <path d="M -26 176 L 26 176 L 21 189 L -21 189 Z" fill="#e8c38a" stroke="#6b4a20" stroke-width="1"/>
+              <path d="M -14 222 L 14 222 L 9 252 L -9 252 Z" fill="#1a0d08"/>
+              <g stroke="#efe2bf" stroke-width="1" opacity=".9">
+                <polyline points="-6,-150 -15,176 -8,224"/>
+                <polyline points="-2,-150 -5,176 -3,224"/>
+                <polyline points="2,-150 5,176 3,224"/>
+                <polyline points="6,-150 15,176 8,224"/>
+              </g>
+            </g>
+            <!-- a friendly, slightly silly face (drawn upright, on the wide end that now leads) -->
+            <g transform="translate(0 -150)">
+              <g fill="#ff8f8f" opacity=".55">
+                <ellipse cx="-56" cy="82" rx="11" ry="6"/><ellipse cx="56" cy="82" rx="11" ry="6"/>
+              </g>
+              <g fill="none" stroke="#2e1004" stroke-width="4" stroke-linecap="round">
+                <path d="M -58 30 Q -42 18 -26 28"/><path d="M 26 26 Q 42 14 58 26"/>
+              </g>
+              <g id="eyes">
+                <circle cx="-40" cy="56" r="17" fill="#fffdf6" stroke="#2e1004" stroke-width="2.5"/>
+                <circle cx="40" cy="56" r="15" fill="#fffdf6" stroke="#2e1004" stroke-width="2.5"/>
+                <g id="pupils" fill="#1a0d08">
+                  <circle cx="-40" cy="56" r="7.5"/><circle cx="40" cy="56" r="7"/>
+                </g>
+                <g fill="#fff"><circle cx="-36" cy="51" r="2.4"/><circle cx="44" cy="51" r="2.2"/></g>
+              </g>
+              <path id="smile" d="M -16 96 Q 0 110 16 96" fill="none" stroke="#2e1004" stroke-width="4" stroke-linecap="round"/>
+            </g>
+          </g>
+
+          <!-- depth fog over the cello -->
+          <rect id="fog" y="108" width="400" height="452" fill="url(#fog)" opacity=".85" pointer-events="none"/>
+
+          <!-- swimmer (blonde, armed with a music stand) -->
+          <g id="swimmer">
+            <g transform="translate(205 104)">
+              <!-- submerged body -->
+              <path d="M -95 14 L -70 8 M -95 2 L -70 6" stroke="#e9b9a0" stroke-width="5" stroke-linecap="round" opacity=".45"/>
+              <ellipse cx="-38" cy="8" rx="38" ry="7" fill="#e9b9a0" opacity=".5"/>
+              <ellipse cx="-34" cy="8" rx="17" ry="6.5" fill="#b8323a" opacity=".65"/>
+              <line id="leftArm" x1="-2" y1="3" x2="-16" y2="-14" stroke="#e9b9a0" stroke-width="4" stroke-linecap="round"/>
+              <!-- splash at feet -->
+              <g stroke="#e6f6ff" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".8">
+                <path d="M -102 2 q 4 -8 8 -2"/><path d="M -92 0 q 3 -10 7 -1"/><path d="M -110 4 q 2 -5 5 -1"/>
+              </g>
+              <!-- head + blonde hair -->
+              <g id="head">
+              <circle cx="8" cy="0" r="8.5" fill="#e9b9a0"/>
+              <path d="M -2 0 C -3 -12 15 -13 18 -3 C 12 -7 6 -6 -2 0 Z" fill="#f2cf6b" stroke="#c99a35" stroke-width=".8"/>
+              <path d="M -1 -2 C -8 0 -14 4 -20 3 C -14 7 -6 6 0 2 Z" fill="#f2cf6b" stroke="#c99a35" stroke-width=".8"/>
+              <circle cx="-2" cy="-6" r="4.4" fill="#f2cf6b" stroke="#c99a35" stroke-width=".8"/>
+              <path d="M 3 -8 C 7 -10 11 -10 14 -7" stroke="#fff3c0" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+              </g>
+              <!-- conducting arm with baton (positions are driven from JS) -->
+              <path id="trail" fill="none" stroke="#ffe7a8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+              <path id="armPath" d="M 2 2 Q 16 -4 24 -18" fill="none" stroke="#e9b9a0" stroke-width="4.5" stroke-linecap="round"/>
+              <line id="batonShadow" x1="24" y1="-18" x2="52" y2="-45" stroke="#3a2a20" stroke-width="2.6" stroke-linecap="round" opacity=".5"/>
+              <line id="baton" x1="24" y1="-18" x2="52" y2="-45" stroke="#fbf8f0" stroke-width="1.6" stroke-linecap="round"/>
+              <circle id="hand" cx="24" cy="-18" r="3.5" fill="#e9b9a0"/>
+            </g>
+          </g>
+
+          <!-- water surface -->
+          <g class="wave">
+            <path d="M -10 110 q 10 -5 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 V 116 H -10 Z"
+              fill="#3a7fa3" opacity=".55"/>
+            <path d="M -10 110 q 10 -5 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0"
+              fill="none" stroke="#dff3ff" stroke-width="1.4" opacity=".7"/>
+          </g>
+        </svg>
+
+        <div class="flash" id="flash"></div>
+        <div class="hint" id="hint">↔ Táhni smyčcem po plátně</div>
+
+        <div class="ticket" id="ticket" role="dialog" aria-live="polite">
+          <div class="ticket-inner">
+            <h3>Přežil(a) jsi!</h3>
+            <p>Čelisti tě tentokrát jen šťouchly.<br>Vidíme se:</p>
+            <p><strong id="tWhen">—</strong></p>
+            <p id="tWhere">—</p>
+            <div class="admit">Vstupenka · 1 os. + deka</div>
+            <p style="margin-top:14px"><button class="btn-primary" id="again">Ještě jednou</button></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="icon-btn" id="bowBtn" aria-label="Táhnout smyčcem" title="Táhnout smyčcem">🎻</button>
+        <div class="meter" aria-hidden="true">
+          <div class="meter-label"><span>Napětí</span><span id="meterTxt">ticho…</span></div>
+          <div class="meter-bar"><div class="meter-fill" id="meter"></div></div>
+        </div>
+        <button class="icon-btn" id="muteBtn" aria-label="Vypnout zvuk" title="Zvuk">🔊</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="card" id="nextCard">
+        <p class="eyebrow">Příští promítání</p>
+        <h2 class="when" id="when">—</h2>
+        <p class="countdown" id="countdown"></p>
+        <div class="clock" id="clock" role="timer" aria-label="Odpočet do začátku" hidden>
+          <div class="unit"><span class="num" id="cD">0</span><span class="lbl" id="lD">dní</span></div>
+          <div class="unit"><span class="num" id="cH">00</span><span class="lbl" id="lH">hodin</span></div>
+          <div class="unit"><span class="num" id="cM">00</span><span class="lbl" id="lM">minut</span></div>
+          <div class="unit sec"><span class="num" id="cS">00</span><span class="lbl" id="lS">sekund</span></div>
+        </div>
+        <div class="facts">
+          <div class="fact"><div class="ico">🕢</div><div><div class="k">Čas</div><div class="v" id="time">—</div></div></div>
+          <div class="fact"><div class="ico">📍</div><div><div class="k">Místo</div><div class="v" id="place">—</div></div></div>
+          <div class="fact"><div class="ico">🎬</div><div><div class="k">Film</div><div class="v" id="film">—</div></div></div>
+        </div>
+        <p class="note" id="note" hidden></p>
+        <div class="actions">
+          <button class="btn-primary" id="icsBtn">📅 Přidat do kalendáře</button>
+          <button id="shareBtn">🔗 Poslat dál</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Celý program</p>
+        <ul class="program" id="program"></ul>
+      </div>
+    </section>
+  </div>
+
+  <footer>Přines deku, čaj a odvahu. 🍂</footer>
+</main>
+
+<script src="program.js"></script>
+<script>
+(() => {
+  const P = window.PROGRAM;
+  const $ = (id) => document.getElementById(id);
+  const DAY = 86400e3;
+
+  /* ── schedule ───────────────────────────────── */
+  // dates: "2026-10-22", "22. 10. 2026", "22.10.2026" or "10/22/2026"; times: "19:30", "19:30:00", "7:30 PM"
+  function parseDate(str) {
+    str = String(str || "").trim();
+    let m;
+    if ((m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) return [+m[1], +m[2], +m[3]];
+    if ((m = str.match(/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})/))) return [+m[3], +m[2], +m[1]];
+    if ((m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/))) return [+m[3], +m[1], +m[2]];
+    return null;
+  }
+  function parseTime(str) {
+    const m = String(str || "").trim().match(/^(\d{1,2})[:.](\d{2})(?::\d{2})?\s*(am|pm|AM|PM)?/);
+    if (!m) return null;
+    let h = +m[1];
+    if (m[3] && /pm/i.test(m[3]) && h < 12) h += 12;
+    if (m[3] && /am/i.test(m[3]) && h === 12) h = 0;
+    return `${h}:${m[2]}`;
+  }
+  function toShows(list) {
+    return list.map((s) => {
+      const ymd = parseDate(s.date);
+      if (!ymd) return null;
+      const time = parseTime(s.time) || P.defaultTime;
+      const [hh, mm] = time.split(":").map(Number);
+      const start = new Date(ymd[0], ymd[1] - 1, ymd[2], hh, mm);
+      const date = `${ymd[0]}-${String(ymd[1]).padStart(2, "0")}-${String(ymd[2]).padStart(2, "0")}`;
+      return { ...s, date, time, place: s.place || P.defaultPlace, start, end: new Date(start.getTime() + (P.durationHours || 3) * 3600e3) };
+    }).filter(Boolean).sort((a, b) => a.start - b.start);
+  }
+  let shows = [];
+
+  // the Google Sheet (must be shared as "Anyone with the link – Viewer")
+  function parseCSV(text) {
+    const rows = []; let row = [], cell = "", q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) { if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c; }
+      else if (c === '"') q = true;
+      else if (c === ",") { row.push(cell); cell = ""; }
+      else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(cell); rows.push(row); row = []; cell = ""; }
+      else cell += c;
+    }
+    if (cell || row.length) { row.push(cell); rows.push(row); }
+    return rows;
+  }
+  async function loadSheet() {
+    if (!P.sheetId) return null;
+    const url = `https://docs.google.com/spreadsheets/d/${P.sheetId}/gviz/tq?tqx=out:csv&headers=1&_=${Date.now()}`;
+    const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), 6000);
+    try {
+      const res = await fetch(url, { signal: ctl.signal });
+      if (!res.ok) throw new Error(res.status);
+      const rows = parseCSV(await res.text());
+      const head = (rows.shift() || []).map((h) => h.trim().toLowerCase());
+      const col = (...names) => head.findIndex((h) => names.some((n) => h.startsWith(n)));
+      const c = { date: col("datum", "date"), time: col("čas", "cas", "time"), place: col("místo", "misto", "place"), address: col("adresa", "address"),
+                  map: col("odkaz", "mapa", "map"), film: col("film"), note: col("poznámka", "poznamka", "note") };
+      if (c.date < 0) throw new Error("no Datum column");
+      const get = (r, k) => (c[k] >= 0 ? (r[c[k]] || "").trim() : "");
+      const list = rows.filter((r) => get(r, "date")).map((r) => {
+        const name = get(r, "place"), address = get(r, "address"), mapUrl = get(r, "map");
+        const same = (!name || name === P.defaultPlace.name) && (!address || address === P.defaultPlace.address) && !mapUrl;
+        return { date: get(r, "date"), time: get(r, "time"), film: get(r, "film"), note: get(r, "note"),
+                 place: same ? null : { name: name || P.defaultPlace.name, address, mapUrl: mapUrl || undefined } };
+      });
+      return list.length ? list : null;
+    } catch (err) {
+      console.warn("Google Sheet unavailable, using program.js", err);
+      return null;
+    } finally { clearTimeout(timer); }
+  }
+
+  const fmtLong = new Intl.DateTimeFormat("cs-CZ", { weekday: "long", day: "numeric", month: "long" });
+  const fmtShort = new Intl.DateTimeFormat("cs-CZ", { weekday: "short", day: "numeric", month: "numeric" });
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const plural = (n, one, few, many) => n === 1 ? one : n >= 2 && n <= 4 ? few : many;
+  const filmName = (s) => s.film || "Překvapení 🤫";
+  const mapUrl = (p) => p.mapUrl || "https://mapy.com/fnc/v1/search?query=" + encodeURIComponent(p.address || p.name);
+
+  $("season").textContent = P.season;
+
+  let next = null;
+  function findNext() { const now = new Date(); next = shows.find((s) => s.end > now) || null; }
+
+  function relDay(s) {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const day = new Date(s.start); day.setHours(0, 0, 0, 0);
+    const diff = Math.round((day - today) / DAY);
+    return diff === 0 ? "Dnes!" : diff === 1 ? "Zítra" : diff === 2 ? "Pozítří" : "";
+  }
+
+  function renderNext() {
+    findNext();
+    if (!next) {
+      $("when").textContent = "Sezóna skončila";
+      $("countdown").textContent = "Díky, že jste přežili. Na jaře zase!";
+      ["time", "place", "film"].forEach((id) => ($(id).textContent = "—"));
+      $("icsBtn").hidden = true;
+      return;
+    }
+    const rel = relDay(next);
+    $("when").innerHTML = (rel ? `<span class="rel">${rel}</span>` : "") + cap(fmtLong.format(next.start));
+    $("time").textContent = next.time;
+    $("place").innerHTML = "";
+    const a = document.createElement("a");
+    a.href = mapUrl(next.place); a.target = "_blank"; a.rel = "noopener";
+    a.textContent = next.place.name;
+    $("place").append(a);
+    if (next.place.address) { const sm = document.createElement("div"); sm.style.cssText = "font-size:14px;color:var(--muted);font-weight:400"; sm.textContent = next.place.address; $("place").append(sm); }
+    $("film").textContent = filmName(next);
+    $("note").hidden = !next.note;
+    $("note").textContent = next.note || "";
+    $("tWhen").textContent = cap(fmtLong.format(next.start)) + " v " + next.time;
+    $("tWhere").textContent = next.place.name;
+    tickCountdown();
+    renderProgram();
+  }
+
+  function tickCountdown() {
+    if (!next) { $("clock").hidden = true; return; }
+    const now = new Date();
+    if (now >= next.end) return renderNext();
+    if (now >= next.start) { $("countdown").textContent = "🔴 Právě promítáme! Plav rychle."; $("clock").hidden = true; return; }
+    let diff = Math.floor((next.start - now) / 1000);
+    const d = Math.floor(diff / 86400); diff -= d * 86400;
+    const h = Math.floor(diff / 3600); diff -= h * 3600;
+    const m = Math.floor(diff / 60); const sec = diff - m * 60;
+    const pad = (n) => String(n).padStart(2, "0");
+    const set = (id, v) => { const el = $(id); if (el.textContent !== v) { el.textContent = v; if (id === "cS") { el.classList.remove("tick"); void el.offsetWidth; el.classList.add("tick"); } } };
+    set("cD", String(d)); set("cH", pad(h)); set("cM", pad(m)); set("cS", pad(sec));
+    $("lD").textContent = plural(d, "den", "dny", "dní");
+    $("lH").textContent = plural(h, "hodina", "hodiny", "hodin");
+    $("lM").textContent = plural(m, "minuta", "minuty", "minut");
+    $("lS").textContent = plural(sec, "sekunda", "sekundy", "sekund");
+    $("countdown").textContent = "Začínáme za";
+    $("clock").hidden = false;
+  }
+
+  function renderProgram() {
+    const now = new Date();
+    $("program").innerHTML = "";
+    shows.forEach((s) => {
+      const li = document.createElement("li");
+      if (s.end <= now) li.className = "past";
+      else if (s === next) li.className = "next";
+      const d = document.createElement("span"); d.className = "d"; d.textContent = fmtShort.format(s.start);
+      const f = document.createElement("span"); f.className = "f"; f.textContent = filmName(s);
+      const extra = [s.time !== P.defaultTime ? s.time : "", s.place.name !== P.defaultPlace.name ? s.place.name : ""].filter(Boolean).join(" · ");
+      if (extra) { const sm = document.createElement("small"); sm.textContent = extra; f.append(sm); }
+      li.append(d, f);
+      $("program").append(li);
+    });
+  }
+
+  /* calendar file */
+  $("icsBtn").addEventListener("click", () => {
+    if (!next) return;
+    const pad = (n) => String(n).padStart(2, "0");
+    const local = (d) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+    const utc = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+    const esc = (s) => String(s || "").replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
+    const ics = [
+      "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//bobinky.cz//celisti//CS", "BEGIN:VEVENT",
+      `UID:${local(next.start)}@bobinky.cz`, `DTSTAMP:${utc(new Date())}`,
+      `DTSTART:${local(next.start)}`, `DTEND:${local(next.end)}`,
+      `SUMMARY:${esc("🎬 Filmový večer: " + filmName(next))}`,
+      `LOCATION:${esc([next.place.name, next.place.address].filter(Boolean).join(", "))}`,
+      `DESCRIPTION:${esc((next.note ? next.note + "\n" : "") + location.href)}`,
+      "END:VEVENT", "END:VCALENDAR",
+    ].join("\r\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+    a.download = `filmovy-vecer-${next.date}.ics`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+
+  $("shareBtn").addEventListener("click", async () => {
+    const text = next ? `Filmový večer ${fmtLong.format(next.start)} v ${next.time}, ${next.place.name} 🎻🦈` : "Čelisti 🎻";
+    if (navigator.share) { try { await navigator.share({ title: "Čelisti", text, url: location.href }); } catch {} return; }
+    try { await navigator.clipboard.writeText(text + " " + location.href); $("shareBtn").textContent = "✅ Zkopírováno"; } catch { $("shareBtn").textContent = location.href; }
+    setTimeout(() => ($("shareBtn").textContent = "🔗 Poslat dál"), 2000);
+  });
+
+  $("countdown").textContent = "Načítám program…";
+  loadSheet().then((list) => {
+    shows = toShows(list || P.screenings);
+    renderNext();
+    setInterval(tickCountdown, 1000);
+  });
+
+  /* ── leaves ─────────────────────────────────── */
+  const leafColors = ["#d9622b", "#e8a33d", "#b8321f", "#c97a2a", "#8f2a1a"];
+  const leavesEl = document.querySelector(".leaves");
+  for (let i = 0; i < 14; i++) {
+    const el = document.createElement("div");
+    el.className = "leaf";
+    const size = 14 + Math.random() * 16;
+    el.style.cssText = `left:${Math.random() * 100}%;width:${size}px;height:${size}px;animation-duration:${10 + Math.random() * 12}s;animation-delay:${-Math.random() * 20}s`;
+    el.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 1 C 15 5 22 6 21 13 C 19 19 14 21 12 23 C 10 21 5 19 3 13 C 2 6 9 5 12 1 Z" fill="${leafColors[i % leafColors.length]}"/><path d="M12 3 V 23" stroke="rgba(0,0,0,.3)" stroke-width="1"/></svg>`;
+    leavesEl.append(el);
+  }
+
+  /* ── audio: a (very) synthetic cello ───────── */
+  let ctx = null, master = null, muted = false;
+  function ensureAudio() {
+    if (ctx) { if (ctx.state === "suspended") ctx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value = muted ? 0 : 0.9;
+    const comp = ctx.createDynamicsCompressor();
+    master.connect(comp); comp.connect(ctx.destination);
+  }
+  let noiseBuf = null;
+  function noise() {
+    if (!noiseBuf) {
+      noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    const src = ctx.createBufferSource(); src.buffer = noiseBuf; src.loop = true; return src;
+  }
+  function playNote(freq, dur, vel) {
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0.0001, t);
+    env.gain.linearRampToValueAtTime(0.22 * vel, t + 0.045);
+    env.gain.setValueAtTime(0.22 * vel, t + dur);
+    env.gain.setTargetAtTime(0.0001, t + dur, 0.12);
+    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.Q.value = 2;
+    lp.frequency.setValueAtTime(500 + 1800 * vel, t);
+    const bodyRes = ctx.createBiquadFilter(); bodyRes.type = "peaking"; bodyRes.frequency.value = 230; bodyRes.Q.value = 1.2; bodyRes.gain.value = 7;
+    lp.connect(bodyRes); bodyRes.connect(env); env.connect(master);
+
+    const vib = ctx.createOscillator(); vib.frequency.value = 5.2;
+    const vibAmt = ctx.createGain(); vibAmt.gain.value = freq * 0.005;
+    vib.connect(vibAmt);
+    const oscs = [[freq, "sawtooth", 1], [freq * 1.004, "sawtooth", 0.7], [freq / 2, "sine", 0.9]].map(([f, type, g]) => {
+      const o = ctx.createOscillator(); o.type = type; o.frequency.value = f;
+      vibAmt.connect(o.frequency);
+      const gg = ctx.createGain(); gg.gain.value = g; o.connect(gg); gg.connect(lp);
+      return o;
+    });
+    // bow scrape
+    const n = noise(), bp = ctx.createBiquadFilter(), ng = ctx.createGain();
+    bp.type = "bandpass"; bp.frequency.value = 2400; bp.Q.value = 0.8;
+    ng.gain.setValueAtTime(0.0001, t); ng.gain.linearRampToValueAtTime(0.05 * vel, t + 0.03); ng.gain.setTargetAtTime(0.0001, t + 0.08, 0.08);
+    n.connect(bp); bp.connect(ng); ng.connect(master);
+
+    const stop = t + dur + 0.8;
+    [vib, n, ...oscs].forEach((o) => { o.start(t); o.stop(stop); });
+  }
+  function boing() {
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    const o = ctx.createOscillator(), g = ctx.createGain(), vib = ctx.createOscillator(), va = ctx.createGain();
+    o.type = "triangle";
+    o.frequency.setValueAtTime(160, t);
+    o.frequency.exponentialRampToValueAtTime(620, t + 0.18);
+    o.frequency.exponentialRampToValueAtTime(240, t + 0.6);
+    vib.frequency.value = 14; va.gain.value = 25; vib.connect(va); va.connect(o.frequency);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.35, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + 0.7);
+    o.connect(g); g.connect(master);
+    [o, vib].forEach((x) => { x.start(t); x.stop(t + 0.75); });
+  }
+  $("muteBtn").addEventListener("click", () => {
+    muted = !muted;
+    $("muteBtn").textContent = muted ? "🔇" : "🔊";
+    $("muteBtn").setAttribute("aria-label", muted ? "Zapnout zvuk" : "Vypnout zvuk");
+    if (master) master.gain.value = muted ? 0 : 0.9;
+  });
+
+  /* ── the game ──────────────────────────────── */
+  const E2 = 82.41, F2 = 87.31;
+  const ATTACK = 1.3; // how far the cello lunges: endpin tip reaches the swimmer
+  const screen = $("screen"), cello = $("cello"), fog = $("fog"), pupils = $("pupils"), swimmer = $("swimmer");
+  const leftArm = $("leftArm"), head = $("head"), armPath = $("armPath"), baton = $("baton"), batonShadow = $("batonShadow"), hand = $("hand"), trail = $("trail");
+  const trailPts = [];
+  let t = 0, tv = 0, state = "idle", lastStroke = 0, noteIdx = 0, hop = 0;
+  let phase = 0, tempo = 0.9, tempoS = 0.9; // conductor: beats are whole numbers of `phase`
+  let celloY = 430, celloS = 0.62;
+  const meterWords = ["ticho…", "něco se hýbe", "da-dum", "da-dum da-dum", "PLAV!", "PLAAAV!!"];
+
+  function spawnNote() {
+    const el = document.createElement("span");
+    el.className = "note-fx";
+    el.textContent = ["♪", "♫", "♩", "♬"][Math.floor(Math.random() * 4)];
+    el.style.left = 50 + (Math.random() - 0.5) * 24 + "%";
+    el.style.top = Math.min(92, ((celloY - 40 * celloS) / 560) * 100) + "%";
+    el.style.setProperty("--dx", (Math.random() - 0.5) * 70 + "px");
+    el.style.setProperty("--rot", (Math.random() - 0.5) * 60 + "deg");
+    el.addEventListener("animationend", () => el.remove());
+    screen.append(el);
+  }
+
+  function stroke() {
+    if (state !== "idle") return;
+    ensureAudio();
+    const now = performance.now();
+    const iv = lastStroke ? now - lastStroke : 800;
+    lastStroke = now;
+    const dur = Math.min(0.9, Math.max(0.12, (iv < 1500 ? iv : 700) * 0.85 / 1000));
+    playNote(noteIdx++ % 2 ? F2 : E2, dur, 0.35 + 0.6 * t);
+    t = Math.min(1, t + (iv < 380 ? 1 / 11 : 1 / 16));
+    // the conductor follows your tempo and nudges her beat onto your note
+    if (iv < 1500) tempo = Math.min(4, Math.max(0.6, 1000 / iv));
+    phase += (Math.round(phase) - phase) * 0.6;
+    hop = 1;
+    spawnNote();
+    $("hint").classList.add("gone");
+    if (t >= 1) attack();
+  }
+
+  function attack() {
+    state = "attack";
+    [E2, F2, E2 * 2, F2 * 2].forEach((f) => playNote(f, 1.1, 1));
+    screen.classList.remove("shake"); void screen.offsetWidth; screen.classList.add("shake");
+    setTimeout(() => {
+      boing();
+      for (let i = 0; i < 6; i++) setTimeout(spawnNote, i * 60);
+      swimmer.classList.remove("yikes"); void swimmer.getBoundingClientRect(); swimmer.classList.add("yikes");
+      $("flash").classList.remove("on"); void $("flash").offsetWidth; $("flash").classList.add("on");
+    }, 800);
+    setTimeout(() => { state = "done"; $("ticket").classList.add("show"); $("again").focus({ preventScroll: true }); }, 1500);
+  }
+
+  $("again").addEventListener("click", (e) => {
+    e.stopPropagation();
+    $("ticket").classList.remove("show");
+    swimmer.classList.remove("yikes");
+    t = 0; noteIdx = 0; lastStroke = 0; state = "idle";
+    screen.focus({ preventScroll: true });
+  });
+
+  // pointer bowing: each change of horizontal direction (after ≥ threshold px) is one stroke; a tap is one stroke too
+  let down = false, lastX = 0, accum = 0, lastDir = 0, moved = 0, downAt = 0;
+  screen.addEventListener("pointerdown", (e) => {
+    if (e.target.closest(".ticket")) return;
+    down = true; lastX = e.clientX; accum = 0; moved = 0; downAt = performance.now();
+  });
+  screen.addEventListener("pointermove", (e) => {
+    const dx = e.clientX - lastX; lastX = e.clientX;
+    if (!down) return;
+    moved += Math.abs(dx);
+    const dir = Math.sign(dx);
+    if (!dir) return;
+    if (Math.sign(accum) !== dir) accum = 0;
+    accum += dx;
+    const threshold = Math.max(28, screen.clientWidth * 0.09);
+    if (Math.abs(accum) >= threshold && dir !== lastDir) { lastDir = dir; accum = 0; stroke(); }
+  });
+  const end = () => {
+    if (down && moved < 10 && performance.now() - downAt < 400) { lastDir = 0; stroke(); }
+    down = false;
+  };
+  screen.addEventListener("pointerup", end);
+  screen.addEventListener("pointercancel", () => (down = false));
+  screen.addEventListener("pointerleave", () => (down = false));
+  screen.addEventListener("keydown", (e) => {
+    if ([" ", "Enter", "ArrowLeft", "ArrowRight"].includes(e.key) && !e.repeat && !e.target.closest(".ticket")) { e.preventDefault(); stroke(); }
+  });
+  $("bowBtn").addEventListener("click", stroke);
+
+  // animation loop
+  let prev = performance.now();
+  function loop(now) {
+    const dt = Math.min(0.1, (now - prev) / 1000); prev = now;
+    if (state === "idle" && now - lastStroke > 1300) t = Math.max(0, t - dt * 0.1);
+    const target = state === "idle" ? t : ATTACK;
+    tv += (target - tv) * Math.min(1, dt * (state === "idle" ? 3 : 6));
+    hop = Math.max(0, hop - dt * 5);
+
+    // cello: bobbing, swaying, little hops on every note
+    const bob = Math.sin(now / 900) * 4 * (state === "idle" ? 1 : 0.2);
+    const wob = Math.sin(now / 520) * (2 + 4 * Math.min(tv, 1)) * (state === "idle" ? 1 : 0.15);
+    celloY = 430 - 90 * tv + bob - hop * 7;
+    celloS = 0.62 + 0.2 * tv;
+    const sx = celloS * (1 - 0.05 * hop), sy = celloS * (1 + 0.05 * hop);
+    cello.setAttribute("transform", `translate(200 ${celloY.toFixed(1)}) rotate(${wob.toFixed(2)}) scale(${sx.toFixed(3)} ${sy.toFixed(3)})`);
+    fog.setAttribute("opacity", Math.max(0, 0.7 - 0.7 * tv).toFixed(3));
+    // googly pupils keep an eye on the swimmer, with a bit of wandering
+    const eyeY = celloY - 94 * celloS, ex = 213 - 200, ey = 104 - eyeY, d = Math.hypot(ex, ey) || 1;
+    const jig = state === "idle" ? 1 : 2.5;
+    const px = (ex / d) * 5 + Math.sin(now / 1300) * 2 * jig, py = (ey / d) * 5 + Math.cos(now / 170) * 0.6 * jig;
+    pupils.setAttribute("transform", `translate(${px.toFixed(2)} ${py.toFixed(2)})`);
+
+    // conductor: the baton hand draws loops (one loop per two beats) with a little dip on every beat,
+    // the wrist flicks the baton and its tip leaves a fading trail
+    const targetTempo = state !== "idle" ? 4.5 : now - lastStroke > 1500 ? 0.9 : tempo;
+    tempoS += (targetTempo - tempoS) * Math.min(1, dt * 3);
+    phase += dt * tempoS;
+    const th = Math.PI * phase;
+    const ictus = 5 * Math.exp(-(phase % 1) * 7);
+    const hx = 22 + 12 * Math.cos(th), hy = -24 + 9 * Math.sin(th) + ictus;
+    const ax = hx - 2, ay = hy - 2, al = Math.hypot(ax, ay) || 1;
+    const elx = 2 + ax / 2 + (-ay / al) * 5, ely = 2 + ay / 2 + (ax / al) * 5;
+    armPath.setAttribute("d", `M 2 2 Q ${elx.toFixed(1)} ${ely.toFixed(1)} ${hx.toFixed(1)} ${hy.toFixed(1)}`);
+    const bang = Math.atan2(ay, ax) + 0.45 * Math.sin(th + 1.2) - 0.15;
+    const tx = hx + 30 * Math.cos(bang), ty = hy + 30 * Math.sin(bang);
+    for (const el of [baton, batonShadow]) {
+      el.setAttribute("x1", hx.toFixed(1)); el.setAttribute("y1", hy.toFixed(1));
+      el.setAttribute("x2", tx.toFixed(1)); el.setAttribute("y2", ty.toFixed(1));
+    }
+    hand.setAttribute("cx", hx.toFixed(1)); hand.setAttribute("cy", hy.toFixed(1));
+    trailPts.push([tx, ty]); if (trailPts.length > 18) trailPts.shift();
+    trail.setAttribute("d", "M " + trailPts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L "));
+    // the other hand shapes the music with a smaller mirrored loop
+    leftArm.setAttribute("x2", (-15 + 4 * Math.cos(-th)).toFixed(1));
+    leftArm.setAttribute("y2", (-14 + 3 * Math.sin(-th) + ictus * 0.5).toFixed(1));
+    const sp = Math.abs(Math.sin(th));
+    head.setAttribute("transform", `rotate(${(2 - 4 * sp).toFixed(2)} 8 5)`);
+
+    $("meter").style.width = (Math.min(1, t) * 100).toFixed(1) + "%";
+    $("meterTxt").textContent = meterWords[Math.min(meterWords.length - 1, Math.floor(t * (meterWords.length - 1) + 0.0001))];
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
