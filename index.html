@@ -606,57 +606,38 @@
   const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   const plural = (n, one, few, many) => n === 1 ? one : n >= 2 && n <= 4 ? few : many;
   const filmName = (s) => s.film || "Překvapení 🤫";
-  // Several films in one evening: "Film A, Film B" (also "+", ";" or a new line).
-  // A themed evening "Theme: Film A, Film B" keeps the theme as plain text and links each film.
-  // If the film cell has its own links (Sheets API only), those are used exactly as written.
-  // Otherwise links come from an optional "Odkaz na film" column (same order, same separators),
-  // and without one, each title links to a ČSFD search.
+  // Film titles are links only where the sheet already has a link:
+  // links inside the film cell (Sheets API), or URLs in an optional "Odkaz na film" column
+  // (several films "A, B" + several URLs in the same order). Everything else stays plain text.
   const splitList = (v) => String(v || "").split(/\s*(?:,|\+|;|\n)\s*/).map((x) => x.trim()).filter(Boolean);
+  const isUrl = (u) => /^https?:\/\//.test(u || "");
+  function linkEl(text, url) {
+    const a = document.createElement("a");
+    a.className = "film-link"; a.href = url; a.target = "_blank"; a.rel = "noopener";
+    a.textContent = text;
+    return a;
+  }
   function filmLinks(s) {
     const frag = document.createDocumentFragment();
     let text = String(s.film || "").trim();
     if (!text) { frag.append(filmName(s)); return frag; }
-    if (s.filmRich) {   // links set in the sheet itself: show the cell exactly as written
-      const csfd = (title) => {
-        const a = document.createElement("a");
-        a.className = "film-link"; a.target = "_blank"; a.rel = "noopener";
-        a.href = "https://www.csfd.cz/hledat/?q=" + encodeURIComponent(title); a.textContent = title;
-        return a;
-      };
+    if (s.filmRich) {   // links set in the film cell itself: show the cell exactly as written
       s.filmRich.forEach(({ text: t, url }) => {
-        if (!url) {   // unlinked titles in a partly linked cell still get a ČSFD search link
-          t.split(/(\s*(?:,|\+|;|\n)\s*)/).forEach((tok, k) => {
-            if (k % 2 || !tok.trim()) { frag.append(tok); return; }
-            const colon = tok.lastIndexOf(":");
-            const prefix = colon >= 0 ? tok.slice(0, colon + 1) : "", title = tok.slice(colon + 1);
-            frag.append(prefix);
-            if (title.trim()) frag.append(title.match(/^\s*/)[0], csfd(title.trim()), title.match(/\s*$/)[0]);
-            else frag.append(title);
-          });
-          return;
-        }
-        const lead = t.match(/^\s*/)[0], trail = t.match(/\s*$/)[0];
-        const a = document.createElement("a");
-        a.className = "film-link"; a.href = url; a.target = "_blank"; a.rel = "noopener";
-        a.textContent = t.trim();
-        frag.append(lead, a, trail);
+        if (!isUrl(url)) { frag.append(t); return; }
+        frag.append(t.match(/^\s*/)[0], linkEl(t.trim(), url), t.match(/\s*$/)[0]);
       });
       return frag;
     }
+    const urls = String(s.filmUrl || "").split(/\s*(?:,|\+|;|\n)\s*/).map((x) => x.trim());   // keep empty slots so URLs stay in order
+    if (!urls.some(isUrl)) { frag.append(text); return frag; }
     const colon = text.indexOf(":");
     if (colon > 0 && /[,+;\n]/.test(text.slice(colon + 1))) {   // "Legendy Trashe: The Room, Birdemic"
       frag.append(text.slice(0, colon + 1) + " ");
       text = text.slice(colon + 1);
     }
-    const titles = splitList(text), urls = splitList(s.filmUrl);
-    titles.forEach((title, i) => {
+    splitList(text).forEach((title, i) => {
       if (i) frag.append(", ");
-      const a = document.createElement("a");
-      a.className = "film-link";
-      a.href = /^https?:\/\//.test(urls[i] || "") ? urls[i] : "https://www.csfd.cz/hledat/?q=" + encodeURIComponent(title);
-      a.target = "_blank"; a.rel = "noopener";
-      a.textContent = title;
-      frag.append(a);
+      frag.append(isUrl(urls[i]) ? linkEl(title, urls[i]) : title);
     });
     return frag;
   }
