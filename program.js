@@ -11,8 +11,18 @@ window.PROGRAM = {
   // Google Sheets API key (restricted to the Sheets API + bobinky.cz). Lets the site read links
   // stored in the film cells. Leave empty to use the plain CSV export (no links from cells).
   apiKey: "AIzaSyBnHIBkhaje2kYrsgSOec7DREDBzqyz7js",
+  // Voting: URL of the Apps Script web app in the "Čelisti – hlasování" sheet (Deploy → Web app → /exec URL).
+  // The options and their links are edited in that sheet. Until the URL is set, the shortlist below is shown without voting.
+  voteUrl: "https://script.google.com/macros/s/AKfycbycuIgxA6Ztp0tq4hQf2IVU5IVUHxxVW_cx2itGJnkueQwm7f2sscns5lponzRgzUoB/exec",
+  voteOptions: [
+    { film: "The Room", url: "https://www.csfd.cz/film/270365-pokoj/prehled/" },
+    { film: "Mega Shark vs. Giant Octopus", url: "https://www.csfd.cz/film/258268-megazralok-vs-obri-chobotnice/prehled/" },
+    { film: "Fateful Findings", url: "https://www.csfd.cz/film/343384-fateful-findings/prehled/" },
+    { film: "Samurai Cop", url: "https://www.csfd.cz/film/209259-policajt-samurai/prehled/" },
+    { film: "Attack of the Killer Tomatoes!", url: "https://www.csfd.cz/film/82229-attack-of-the-killer-tomatoes/prehled/" },
+  ],
   season: "Podzimní filmové večery",
-  defaultTime: "19:30",
+  defaultTime: "19:00",
   durationHours: 3, // how long a screening "counts" as running (and calendar event length)
   defaultPlace: {
     name: "Kino Obývák",

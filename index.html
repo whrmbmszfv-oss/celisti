@@ -219,6 +219,52 @@
     100% { transform: none; }
   }
 
+  /* Birdemic birds: deliberately cheap clip-art with a badly keyed white box */
+  .birds { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .bird {
+    position: absolute; width: 17%; aspect-ratio: 3 / 2; pointer-events: auto; touch-action: none;
+    /* a wire coat hanger – the only known weapon against Birdemic birds */
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g fill='none' stroke-linecap='round' stroke-linejoin='round'><path d='M16 10 V8 a3 3 0 1 1 3 -3 M16 10 L3 23 H29 Z' stroke='white' stroke-opacity='.8' stroke-width='4'/><path d='M16 10 V8 a3 3 0 1 1 3 -3 M16 10 L3 23 H29 Z' stroke='%23555' stroke-width='1.8'/></g></svg>") 16 16, crosshair;
+  }
+  .bird svg { width: 100%; height: 100%; display: block; }
+  .boom { position: absolute; width: 24%; aspect-ratio: 1; pointer-events: none; transform: translate(-50%, -50%); animation: boom .55s steps(5) forwards; }
+  .boom svg { width: 100%; height: 100%; display: block; }
+  @keyframes boom { from { transform: translate(-50%, -50%) scale(.2); opacity: 1; } 70% { opacity: 1; } to { transform: translate(-50%, -50%) scale(1.4); opacity: 0; } }
+  .kills {
+    position: absolute; left: 10px; top: 10px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 800;
+    background: rgba(5, 12, 24, .7); border: 1px solid rgba(255,255,255,.15); pointer-events: none;
+  }
+  #swimmer.duck { transition: transform .25s, opacity .25s; transform: translateY(12px); opacity: .25; }
+  #swimmer { transition: transform .4s, opacity .4s; }
+
+  /* voting */
+  .vote-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .vote-opt {
+    position: relative; display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; overflow: hidden;
+    padding: 11px 12px; border-radius: 12px; font-weight: 700;
+  }
+  .vote-opt .bar { position: absolute; inset: 0 auto 0 0; width: 0; background: rgba(224, 122, 44, .22); transition: width .5s; }
+  .vote-opt .name, .vote-opt .count, .vote-opt .ext { position: relative; }
+  .vote-opt .name { flex: 1; }
+  .vote-opt .count { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .vote-opt.mine { border-color: var(--orange); }
+  .vote-opt.mine .count::before { content: "✓ tvůj hlas · "; color: var(--orange); }
+  .vote-opt:disabled { cursor: default; opacity: .7; }
+  .vote-row { display: flex; gap: 6px; align-items: stretch; }
+  .vote-row .ext { display: grid; place-items: center; width: 40px; border-radius: 12px; border: 1px solid var(--line); color: var(--muted); text-decoration: none; flex: none; }
+  .vote-row .ext:hover { color: var(--gold); }
+  .vote-note { color: var(--muted); font-size: 14px; margin: 12px 0 0; }
+
+  /* already seen */
+  .seen { list-style: none; margin: 0; padding: 0; }
+  .seen li { padding: 12px 0; border-top: 1px solid rgba(233,180,90,.12); }
+  .seen li:first-child { border-top: 0; padding-top: 0; }
+  .seen .d { color: var(--gold); font-weight: 800; font-size: 13px; letter-spacing: .05em; }
+  .seen .f { display: block; margin: 2px 0; font-weight: 600; }
+  .seen .verdict { display: block; color: var(--muted); font-style: italic; }
+  .seen .trash { display: block; margin-top: 4px; font-size: 14px; letter-spacing: 2px; }
+  .seen .trash .off { opacity: .2; filter: grayscale(1); }
+
   @media (prefers-reduced-motion: reduce) {
     .leaves, .hint { animation: none; }
     .leaves { display: none; }
@@ -393,11 +439,12 @@
               <!-- bow arm (bows back and forth along the stick on every note; driven from JS) -->
               <g id="bowArm">
                 <line x1="2" y1="2" x2="26" y2="-20" stroke="#e9b9a0" stroke-width="4.5" stroke-linecap="round"/>
+                <!-- wire coat hanger, held by the bottom bar: the only weapon against Birdemic birds -->
                 <g id="bow">
-                  <line x1="20" y1="-14" x2="96" y2="-57" stroke="#4a200c" stroke-width="2.6" stroke-linecap="round"/>
-                  <line x1="24" y1="-9" x2="94" y2="-51" stroke="#f4ead2" stroke-width="1.2"/>
-                  <line x1="94" y1="-51" x2="96" y2="-57" stroke="#4a200c" stroke-width="2"/>
-                  <rect x="20" y="-18" width="9" height="7" rx="1.5" fill="#1a0d08" transform="rotate(-30 24 -14)"/>
+                  <g transform="translate(27 -21) rotate(52) scale(1.5)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M -16 0 H 16 L 0 -15 Z M 0 -15 V -19 C 0 -24 5 -26 7.5 -23.5 C 9.5 -21 7 -18.5 4.5 -19.5" stroke="#2a2e35" stroke-width="2.4"/>
+                    <path d="M -16 0 H 16 L 0 -15 Z M 0 -15 V -19 C 0 -24 5 -26 7.5 -23.5 C 9.5 -21 7 -18.5 4.5 -19.5" stroke="#dfe3e8" stroke-width="1.1"/>
+                  </g>
                 </g>
                 <circle cx="27" cy="-20" r="3.5" fill="#e9b9a0"/>
               </g>
@@ -413,6 +460,8 @@
           </g>
         </svg>
 
+        <div class="birds" id="birds"></div>
+        <div class="kills" id="kills" hidden>🪝 0</div>
         <div class="flash" id="flash"></div>
         <div class="hint" id="hint">↔ Táhni smyčcem po plátně</div>
 
@@ -461,9 +510,22 @@
         </div>
       </div>
 
+      <div class="card" id="voteCard" hidden>
+        <p class="eyebrow">Hlasování</p>
+        <h2 class="when" style="font-size:clamp(26px,5vw,34px)">Co pustíme příště?</h2>
+        <p class="countdown">Klikni na film. Hlas můžeš kdykoli změnit.</p>
+        <ul class="vote-list" id="voteList"></ul>
+        <p class="vote-note" id="voteNote" hidden></p>
+      </div>
+
       <div class="card">
         <p class="eyebrow">Celý program</p>
         <ul class="program" id="program"></ul>
+      </div>
+
+      <div class="card" id="seenCard" hidden>
+        <p class="eyebrow">Už jsme viděli</p>
+        <ul class="seen" id="seen"></ul>
       </div>
     </section>
   </div>
@@ -582,7 +644,8 @@
       };
       const c = { date: col("datum", "date"), time: col("čas", "cas", "time"), place: col("místo", "misto", "place"), address: col("adresa", "address"),
                   map: col("odkaz na mapu", "mapa", "map"), film: col("film"),
-                  filmUrl: col("odkaz na film", "odkaz na filmy", "csfd", "imdb", "film url"), note: col("poznámka", "poznamka", "note") };
+                  filmUrl: col("odkaz na film", "odkaz na filmy", "csfd", "imdb", "film url"), note: col("poznámka", "poznamka", "note"),
+                  verdict: col("verdikt", "verdict"), rating: col("hodnocení", "hodnoceni", "rating", "trash") };
       if (c.date < 0) throw new Error("no Datum column");
       const get = (r, k) => (c[k] >= 0 ? (r[c[k]] || "").trim() : "");
       const list = [];
@@ -591,6 +654,7 @@
         const name = get(r, "place"), address = get(r, "address"), mapUrl = get(r, "map");
         const same = (!name || name === P.defaultPlace.name) && (!address || address === P.defaultPlace.address) && !mapUrl;
         list.push({ date: get(r, "date"), time: get(r, "time"), film: get(r, "film"), filmUrl: get(r, "filmUrl"), note: get(r, "note"),
+                    verdict: get(r, "verdict"), rating: get(r, "rating"),
                     filmRich: c.film >= 0 ? rich[i]?.[c.film] || null : null,
                     place: same ? null : { name: name || P.defaultPlace.name, address, mapUrl: mapUrl || undefined } });
       });
@@ -705,10 +769,9 @@
   function renderProgram() {
     const now = new Date();
     $("program").innerHTML = "";
-    shows.forEach((s) => {
+    shows.filter((s) => s.end > now).forEach((s) => {
       const li = document.createElement("li");
-      if (s.end <= now) li.className = "past";
-      else if (s === next) li.className = "next";
+      if (s === next) li.className = "next";
       const d = document.createElement("span"); d.className = "d"; d.textContent = fmtShort.format(s.start);
       const f = document.createElement("span"); f.className = "f"; f.append(filmLinks(s));
       const extra = [s.time !== P.defaultTime ? s.time : "", s.place.name !== P.defaultPlace.name ? s.place.name : ""].filter(Boolean).join(" · ");
@@ -716,7 +779,94 @@
       li.append(d, f);
       $("program").append(li);
     });
+    renderSeen();
   }
+
+  // "Už jsme viděli": past evenings, newest first, with the verdict and a 1–5 💩 trash-o-meter from the sheet
+  function renderSeen() {
+    const now = new Date();
+    const past = shows.filter((s) => s.end <= now).reverse();
+    $("seenCard").hidden = !past.length;
+    $("seen").innerHTML = "";
+    past.forEach((s) => {
+      const li = document.createElement("li");
+      const d = document.createElement("span"); d.className = "d"; d.textContent = fmtShort.format(s.start);
+      const f = document.createElement("span"); f.className = "f"; f.append(filmLinks(s));
+      li.append(d, f);
+      if (s.verdict) { const v = document.createElement("span"); v.className = "verdict"; v.textContent = "„" + s.verdict + "“"; li.append(v); }
+      const r = Math.round(parseFloat(String(s.rating || "").replace(",", ".")));
+      if (r >= 1) {
+        const n = Math.min(5, r);
+        const tr = document.createElement("span"); tr.className = "trash"; tr.title = `Trash-o-metr: ${n}/5`;
+        tr.innerHTML = "💩".repeat(n) + `<span class="off">${"💩".repeat(5 - n)}</span>`;
+        li.append(tr);
+      }
+      $("seen").append(li);
+    });
+  }
+
+  /* ── voting: options and counts come from the Apps Script in the "Čelisti – hlasování" sheet ── */
+  const store = {
+    get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+  };
+  let voter = store.get("celisti-voter");
+  if (!voter) { voter = Math.random().toString(36).slice(2) + Date.now().toString(36); store.set("celisti-voter", voter); }
+  let myVote = store.get("celisti-vote") || "";
+  let voteOptions = [];
+
+  function renderVotes(live) {
+    const total = voteOptions.reduce((n, o) => n + (o.votes || 0), 0);
+    $("voteCard").hidden = !voteOptions.length;
+    $("voteList").innerHTML = "";
+    voteOptions.forEach((o) => {
+      const li = document.createElement("li"); li.className = "vote-row";
+      const b = document.createElement("button"); b.type = "button";
+      b.className = "vote-opt" + (o.film === myVote ? " mine" : "");
+      b.disabled = !live;
+      const bar = document.createElement("span"); bar.className = "bar";
+      bar.style.width = total ? (100 * o.votes / total).toFixed(1) + "%" : "0";
+      const name = document.createElement("span"); name.className = "name"; name.textContent = o.film;
+      const count = document.createElement("span"); count.className = "count";
+      count.textContent = `${o.votes || 0} ${plural(o.votes || 0, "hlas", "hlasy", "hlasů")}`;
+      b.append(bar, name, count);
+      b.addEventListener("click", () => castVote(o.film));
+      li.append(b);
+      if (isUrl(o.url)) {
+        const a = document.createElement("a"); a.className = "ext"; a.href = o.url; a.target = "_blank"; a.rel = "noopener";
+        a.title = "Víc o filmu"; a.setAttribute("aria-label", "Víc o filmu " + o.film); a.textContent = "↗";
+        li.append(a);
+      }
+      $("voteList").append(li);
+    });
+    $("voteNote").hidden = live;
+    $("voteNote").textContent = live ? "" : "Hlasování se teprve chystá, brzy půjde hlasovat.";
+  }
+
+  async function loadVotes() {
+    if (P.voteUrl) {
+      try {
+        const data = await (await fetchWithTimeout(P.voteUrl, 8000)).json();
+        if (data.ok && Array.isArray(data.options)) { voteOptions = data.options; renderVotes(true); return; }
+      } catch (err) { console.warn("Voting unavailable", err); }
+    }
+    // no backend yet (or it failed): show the shortlist from program.js without voting
+    voteOptions = (P.voteOptions || []).map((o) => ({ ...o, votes: 0 }));
+    renderVotes(false);
+  }
+
+  function castVote(film) {
+    if (!P.voteUrl || film === myVote) return;
+    // optimistic update, then ask the backend for the real numbers
+    voteOptions.forEach((o) => { if (o.film === myVote) o.votes = Math.max(0, o.votes - 1); if (o.film === film) o.votes += 1; });
+    myVote = film; store.set("celisti-vote", film);
+    renderVotes(true);
+    // Apps Script answers through a redirect without CORS headers, so the vote is sent "no-cors" (fire and forget)
+    fetch(P.voteUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ film, voter }) })
+      .then(() => setTimeout(loadVotes, 1500))
+      .catch((err) => console.warn("Vote failed", err));
+  }
+  loadVotes();
 
   /* calendar file */
   $("icsBtn").addEventListener("click", () => {
@@ -900,7 +1050,7 @@
   // pointer bowing: each change of horizontal direction (after ≥ threshold px) is one stroke; a tap is one stroke too
   let down = false, lastX = 0, accum = 0, lastDir = 0, moved = 0, downAt = 0;
   screen.addEventListener("pointerdown", (e) => {
-    if (e.target.closest(".ticket")) return;
+    if (e.target.closest(".ticket, .bird")) return;
     down = true; lastX = e.clientX; accum = 0; moved = 0; downAt = performance.now();
   });
   screen.addEventListener("pointermove", (e) => {
@@ -925,6 +1075,110 @@
     if ([" ", "Enter", "ArrowLeft", "ArrowRight"].includes(e.key) && !e.repeat && !e.target.closest(".ticket")) { e.preventDefault(); stroke(); }
   });
   $("bowBtn").addEventListener("click", stroke);
+
+  /* ── Birdemic birds: they drift in, hover stiffly, dive-bomb the swimmer; a coat hanger click makes them explode ── */
+  const birdsEl = $("birds");
+  const birdSVG = `<svg viewBox="0 0 90 60" aria-hidden="true">
+    <rect x="3" y="5" width="84" height="50" fill="#fff" opacity=".88"/>
+    <g class="wings">
+      <polygon points="44,31 6,12 14,27 3,37 38,36" fill="#4b2f16" stroke="#2a1708" stroke-width="1"/>
+      <polygon points="48,31 80,14 74,28 86,38 52,36" fill="#5a3a1c" stroke="#2a1708" stroke-width="1"/>
+    </g>
+    <polygon points="33,33 22,29 23,41" fill="#4b2f16"/>
+    <ellipse cx="45" cy="34" rx="13" ry="8" fill="#5a3a1c"/>
+    <circle cx="58" cy="27" r="7.5" fill="#f4f1ea" stroke="#bbb" stroke-width="1"/>
+    <polygon points="64,25 73,28.5 64,31" fill="#f2b01e"/>
+    <circle cx="60" cy="25" r="1.4" fill="#111"/>
+  </svg>`;
+  const boomSVG = () => {
+    let pts = "";
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2, r = i % 2 ? 22 + Math.random() * 8 : 48;
+      pts += `${(50 + r * Math.cos(a)).toFixed(1)},${(50 + r * Math.sin(a)).toFixed(1)} `;
+    }
+    return `<svg viewBox="0 0 100 100" aria-hidden="true"><polygon points="${pts}" fill="#ffcf3a" stroke="#ff5a1a" stroke-width="4"/><circle cx="50" cy="50" r="16" fill="#fff6b0"/></svg>`;
+  };
+  const birds = [];
+  let nextSpawn = performance.now() + 2500, kills = parseInt(store.get("celisti-kills") || "0", 10) || 0;
+  const killsEl = $("kills");
+  const showKills = () => { killsEl.hidden = !kills; killsEl.textContent = `🪝 ${kills} ${plural(kills, "pták", "ptáci", "ptáků")}`; };
+  showKills();
+
+  function screech() {
+    if (!ctx || muted) return;
+    const t0 = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(), v = ctx.createOscillator(), va = ctx.createGain();
+    o.type = "sawtooth"; o.frequency.setValueAtTime(1500, t0); o.frequency.exponentialRampToValueAtTime(700, t0 + 0.35);
+    v.frequency.value = 32; va.gain.value = 120; v.connect(va); va.connect(o.frequency);
+    g.gain.setValueAtTime(0.0001, t0); g.gain.linearRampToValueAtTime(0.06, t0 + 0.03); g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.4);
+    o.connect(g); g.connect(master); [o, v].forEach((x) => { x.start(t0); x.stop(t0 + 0.45); });
+  }
+  function kaboom() {
+    if (!ctx) return;
+    const t0 = ctx.currentTime;
+    const n = noise(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+    lp.type = "lowpass"; lp.frequency.setValueAtTime(1400, t0); lp.frequency.exponentialRampToValueAtTime(90, t0 + 0.5);
+    g.gain.setValueAtTime(0.8, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.55);
+    n.connect(lp); lp.connect(g); g.connect(master); n.start(t0); n.stop(t0 + 0.6);
+    const o = ctx.createOscillator(), og = ctx.createGain();
+    o.frequency.setValueAtTime(90, t0); o.frequency.exponentialRampToValueAtTime(35, t0 + 0.4);
+    og.gain.setValueAtTime(0.5, t0); og.gain.exponentialRampToValueAtTime(0.001, t0 + 0.45);
+    o.connect(og); og.connect(master); o.start(t0); o.stop(t0 + 0.5);
+  }
+
+  function spawnBird() {
+    const dir = Math.random() < 0.5 ? 1 : -1;
+    const el = document.createElement("div");
+    el.className = "bird"; el.innerHTML = birdSVG;
+    el.setAttribute("role", "button"); el.setAttribute("aria-label", "Pták z Ptákodemie – sestřel ho ramínkem");
+    const b = { el, dir, x: dir > 0 ? -12 : 112, y: 5 + Math.random() * 24, vx: dir * (7 + Math.random() * 5), seed: Math.random() * 10,
+                mode: "cruise", diveAt: performance.now() + 2500 + Math.random() * 5000, frame: 0 };
+    el.addEventListener("pointerdown", (e) => { e.stopPropagation(); e.preventDefault(); shootBird(b); });
+    birds.push(b); birdsEl.append(el);
+    screech();
+  }
+  function removeBird(b) { b.el.remove(); birds.splice(birds.indexOf(b), 1); }
+  function shootBird(b) {
+    if (!birds.includes(b)) return;
+    ensureAudio(); kaboom();
+    const boom = document.createElement("div");
+    boom.className = "boom"; boom.innerHTML = boomSVG();
+    boom.style.left = b.x + "%"; boom.style.top = b.y + "%";
+    boom.addEventListener("animationend", () => boom.remove());
+    birdsEl.append(boom);
+    removeBird(b);
+    kills++; store.set("celisti-kills", String(kills)); showKills();
+    $("hint").classList.add("gone");
+  }
+  // swimmer's head is about here, in % of the screen
+  const SWIM_X = 52.5, SWIM_Y = 18;
+  let duckUntil = 0;
+  function updateBirds(now, dt) {
+    if (now > nextSpawn && state === "idle" && !document.hidden) {
+      const n = 1 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < n && birds.length < 4; i++) setTimeout(spawnBird, i * 450);
+      nextSpawn = now + 7000 + Math.random() * 7000;
+    }
+    swimmer.classList.toggle("duck", now < duckUntil);
+    for (const b of [...birds]) {
+      if (b.mode === "cruise") {
+        b.x += b.vx * dt;
+        b.y += Math.sin(now / 260 + b.seed) * 0.04;          // stiff, jerky "hovering"
+        if (now > b.diveAt && b.x > 10 && b.x < 90) b.mode = "dive";
+      } else if (b.mode === "dive") {
+        const dx = SWIM_X - b.x, dy = SWIM_Y - b.y, d = Math.hypot(dx, dy);
+        b.x += (dx / d) * 32 * dt; b.y += (dy / d) * 32 * dt;
+        if (d < 4) { duckUntil = now + 1100; b.mode = "flee"; screech(); }
+      } else {
+        b.x += b.dir * 26 * dt; b.y -= 22 * dt;
+      }
+      if (b.x < -25 || b.x > 125 || b.y < -25) { removeBird(b); continue; }
+      // two-frame "flapping", like a cheap GIF
+      if (now - (b.flapAt || 0) > 380) { b.flapAt = now; b.frame ^= 1; }
+      b.el.style.left = b.x + "%"; b.el.style.top = b.y + "%";
+      b.el.style.transform = `translate(-50%, -50%) scaleX(${b.mode === "flee" ? -b.dir : b.dir}) rotate(${b.mode === "dive" ? 18 : 0}deg)`;
+      b.el.querySelector(".wings").setAttribute("transform", b.frame ? "translate(0 62) scale(1 -1)" : "");
+    }
+  }
 
   // animation loop
   let prev = performance.now();
@@ -957,6 +1211,7 @@
     bowArm.setAttribute("transform", `rotate(${(bowPos * -8).toFixed(2)} 2 2) translate(${(bx * 0.45).toFixed(2)} ${(by * 0.45).toFixed(2)})`);
     head.setAttribute("transform", `rotate(${(bowPos * 2 - hop * 3).toFixed(2)} 8 5)`);
 
+    updateBirds(now, dt);
     $("meter").style.width = (Math.min(1, t) * 100).toFixed(1) + "%";
     $("meterTxt").textContent = meterWords[Math.min(meterWords.length - 1, Math.floor(t * (meterWords.length - 1) + 0.0001))];
     requestAnimationFrame(loop);
