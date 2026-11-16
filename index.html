@@ -1099,7 +1099,7 @@
     return `<svg viewBox="0 0 100 100" aria-hidden="true"><polygon points="${pts}" fill="#ffcf3a" stroke="#ff5a1a" stroke-width="4"/><circle cx="50" cy="50" r="16" fill="#fff6b0"/></svg>`;
   };
   const birds = [];
-  let nextSpawn = performance.now() + 2500, kills = parseInt(store.get("celisti-kills") || "0", 10) || 0;
+  let nextSpawn = performance.now() + 600, kills = parseInt(store.get("celisti-kills") || "0", 10) || 0;
   const killsEl = $("kills");
   const showKills = () => { killsEl.hidden = !kills; killsEl.textContent = `🪝 ${kills} ${plural(kills, "pták", "ptáci", "ptáků")}`; };
   showKills();
@@ -1126,6 +1126,7 @@
   }
 
   function spawnBird() {
+    if (birds.length >= 6) return;
     const dir = Math.random() < 0.5 ? 1 : -1;
     const el = document.createElement("div");
     el.className = "bird"; el.innerHTML = birdSVG;
@@ -1155,8 +1156,8 @@
   function updateBirds(now, dt) {
     if (now > nextSpawn && state === "idle" && !document.hidden) {
       const n = 1 + Math.floor(Math.random() * 3);
-      for (let i = 0; i < n && birds.length < 4; i++) setTimeout(spawnBird, i * 450);
-      nextSpawn = now + 7000 + Math.random() * 7000;
+      for (let i = 0; i < n && birds.length < 6; i++) setTimeout(spawnBird, i * 450);
+      nextSpawn = now + 3000 + Math.random() * 3000;
     }
     swimmer.classList.toggle("duck", now < duckUntil);
     for (const b of [...birds]) {
